@@ -16,19 +16,17 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 export default {
     data: new SlashCommandBuilder()
         .setName("gcreate")
-        .setDescription("Starts a new giveaway in a specified channel.")
+        .setDescription("Rozpoczyna nowy konkurs w wybranym kanale.")
         .addStringOption((option) =>
             option
                 .setName("duration")
-                .setDescription(
-                    "How long the giveaway should last (e.g., 1h, 30m, 5d).",
-                )
+                .setDescription("Jak długo ma trwać konkurs (np. 1h, 30m, 5d).")
                 .setRequired(true),
         )
         .addIntegerOption((option) =>
             option
                 .setName("winners")
-                .setDescription("The number of winners to pick.")
+                .setDescription("Liczba zwycięzców do wybrania.")
                 .setMinValue(1)
                 .setMaxValue(10)
                 .setRequired(true),
@@ -36,13 +34,13 @@ export default {
         .addStringOption((option) =>
             option
                 .setName("prize")
-                .setDescription("The prize being given away.")
+                .setDescription("Nagroda w konkursie.")
                 .setRequired(true),
         )
         .addChannelOption((option) =>
             option
                 .setName("channel")
-                .setDescription("The channel to send the giveaway to (defaults to current channel).")
+                .setDescription("Kanał, na który ma zostać wysłany konkurs (domyślnie bieżący kanał).")
                 .addChannelTypes(ChannelType.GuildText)
                 .setRequired(false),
         )
@@ -50,52 +48,46 @@ export default {
 
     async execute(interaction) {
         try {
-            
             if (!interaction.inGuild()) {
                 throw new TitanBotError(
-                    'Giveaway command used outside guild',
+                    'Komenda konkursu użyta poza serwerem',
                     ErrorTypes.VALIDATION,
-                    'This command can only be used in a server.',
+                    'Ta komenda może być używana tylko na serwerze.',
                     { userId: interaction.user.id }
                 );
             }
 
-            
             if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
                 throw new TitanBotError(
-                    'User lacks ManageGuild permission',
+                    'Użytkownik nie ma uprawnienia Manage Server',
                     ErrorTypes.PERMISSION,
-                    "You need the 'Manage Server' permission to start a giveaway.",
+                    "Potrzebujesz uprawnienia „Zarządzanie serwerem”, aby rozpocząć konkurs.",
                     { userId: interaction.user.id, guildId: interaction.guildId }
                 );
             }
 
-            logger.info(`Giveaway creation started by ${interaction.user.tag} in guild ${interaction.guildId}`);
+            logger.info(`Tworzenie konkursu rozpoczęte przez ${interaction.user.tag} na serwerze ${interaction.guildId}`);
 
-            
             const durationString = interaction.options.getString("duration");
             const winnerCount = interaction.options.getInteger("winners");
             const prize = interaction.options.getString("prize");
             const targetChannel = interaction.options.getChannel("channel") || interaction.channel;
 
-            
             const durationMs = parseDuration(durationString);
             validateWinnerCount(winnerCount);
             const prizeName = validatePrize(prize);
 
-            
             if (!targetChannel.isTextBased()) {
                 throw new TitanBotError(
-                    'Target channel is not text-based',
+                    'Wybrany kanał nie jest tekstowy',
                     ErrorTypes.VALIDATION,
-                    'The channel must be a text channel.',
+                    'Kanał musi być tekstowy.',
                     { channelId: targetChannel.id, channelType: targetChannel.type }
                 );
             }
 
             const endTime = Date.now() + durationMs;
 
-            
             const initialGiveawayData = {
                 messageId: "placeholder",
                 channelId: targetChannel.id,
@@ -111,18 +103,15 @@ export default {
                 createdAt: new Date().toISOString()
             };
 
-            
             const embed = createGiveawayEmbed(initialGiveawayData, "active");
             const row = createGiveawayButtons(false);
-            
-            
+
             const giveawayMessage = await targetChannel.send({
-                content: "🎉 **NEW GIVEAWAY** 🎉",
+                content: "🎉 **NOWY KONKURS** 🎉",
                 embeds: [embed],
                 components: [row],
             });
 
-            
             initialGiveawayData.messageId = giveawayMessage.id;
             const saved = await saveGiveaway(
                 interaction.client,
@@ -131,37 +120,36 @@ export default {
             );
 
             if (!saved) {
-                logger.warn(`Failed to save giveaway to database: ${giveawayMessage.id}`);
+                logger.warn(`Nie udało się zapisać konkursu w bazie danych: ${giveawayMessage.id}`);
             }
 
-            
             try {
                 await logEvent({
                     client: interaction.client,
                     guildId: interaction.guildId,
                     eventType: EVENT_TYPES.GIVEAWAY_CREATE,
                     data: {
-                        description: `Giveaway created: ${prizeName}`,
+                        description: `Utworzono konkurs: ${prizeName}`,
                         channelId: targetChannel.id,
                         userId: interaction.user.id,
                         fields: [
                             {
-                                name: '🎁 Prize',
+                                name: '🎁 Nagroda',
                                 value: prizeName,
                                 inline: true
                             },
                             {
-                                name: '🏆 Winners',
+                                name: '🏆 Zwycięzcy',
                                 value: winnerCount.toString(),
                                 inline: true
                             },
                             {
-                                name: '⏰ Duration',
+                                name: '⏰ Czas trwania',
                                 value: durationString,
                                 inline: true
                             },
                             {
-                                name: '📍 Channel',
+                                name: '📍 Kanał',
                                 value: targetChannel.toString(),
                                 inline: true
                             }
@@ -169,17 +157,16 @@ export default {
                     }
                 });
             } catch (logError) {
-                logger.debug('Error logging giveaway creation event:', logError);
+                logger.debug('Błąd podczas logowania zdarzenia konkursu:', logError);
             }
 
-            logger.info(`Giveaway created successfully: ${giveawayMessage.id} in ${targetChannel.name}`);
+            logger.info(`Konkurs został pomyślnie utworzony: ${giveawayMessage.id} na kanale ${targetChannel.name}`);
 
-            
             await InteractionHelper.safeReply(interaction, {
                 embeds: [
                     successEmbed(
-                        `Giveaway Started! 🎉`,
-                        `A new giveaway for **${prizeName}** has been started in ${targetChannel} and will end in **${durationString}**.`,
+                        `Konkurs rozpoczęty! 🎉`,
+                        `Nowy konkurs o nagrodę **${prizeName}** został rozpoczęty na kanale ${targetChannel} i zakończy się za **${durationString}**.`,
                     ),
                 ],
                 flags: MessageFlags.Ephemeral,
@@ -194,6 +181,3 @@ export default {
         }
     },
 };
-
-
-
