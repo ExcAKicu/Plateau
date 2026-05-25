@@ -19,15 +19,15 @@ export default {
             if (sortedBirthdays.length === 0) {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [createEmbed({
-                        title: '❌ No Birthdays',
-                        description: 'No birthdays have been set in this server yet.',
+                        title: '❌ Żadnych urodzin',
+                        description: 'Na tym serwerze nie ustawiono jeszcze żadnych urodzin.',
                         color: 'error'
                     })]
                 });
             }
 
             const embed = createEmbed({
-                title: "🎂 Server Birthdays",
+                title: "🎂 Urodziny serwera",
                 color: 'info'
             });
 
@@ -58,8 +58,8 @@ export default {
             if (displayIndex === 0) {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [createEmbed({
-                        title: '❌ No Birthdays',
-                        description: 'No birthdays have been set by current server members.',
+                        title: '❌ Żadnych urodzin',
+                        description: 'Obecni członkowie serwera nie ustawili żadnych urodzin.',
                         color: 'error'
                     })]
                 });
@@ -80,7 +80,7 @@ export default {
                 commandName: 'birthday_list'
             });
         } catch (error) {
-            logger.error("Birthday list command execution failed", {
+            logger.error("Nie udało się wykonać polecenia listy urodzin", {
                 error: error.message,
                 stack: error.stack,
                 userId: interaction.user.id,
