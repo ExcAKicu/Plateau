@@ -20,7 +20,7 @@ export default {
             if (!birthdayData) {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [createEmbed({
-                        title: '❌ No Birthday Found',
+                        title: '❌ Nie znaleziono urodzin',
                         description: targetUser.id === interaction.user.id 
                             ? "You haven't set your birthday yet. Use `/birthday set` to add it!"
                             : `${targetUser.username} hasn't set their birthday yet.`,
@@ -30,7 +30,7 @@ export default {
             }
             
             const embed = createEmbed({
-                title: "🎂 Birthday Information",
+                title: "🎂 Informacje o urodzinach",
                 description: `**Date:** ${birthdayData.monthName} ${birthdayData.day}\n**User:** ${targetUser.toString()}`,
                 color: 'info',
                 footer: targetUser.id === interaction.user.id ? "Your Birthday" : `${targetUser.username}'s Birthday`
@@ -38,14 +38,14 @@ export default {
             
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
             
-            logger.info('Birthday info retrieved successfully', {
+            logger.info('Informacje o urodzinach zostały pomyślnie pobrane', {
                 userId: interaction.user.id,
                 targetUserId: targetUser.id,
                 guildId,
                 commandName: 'birthday_info'
             });
         } catch (error) {
-            logger.error("Birthday info command execution failed", {
+            logger.error("Nie udało się wykonać polecenia dotyczącego informacji o urodzinach", {
                 error: error.message,
                 stack: error.stack,
                 userId: interaction.user.id,
