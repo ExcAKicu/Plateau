@@ -18,8 +18,8 @@ export default {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         createEmbed({
-                            title: '❌ No Birthdays Found',
-                            description: 'No birthdays have been set up in this server yet. Use `/birthday set` to add birthdays!',
+                            title: '❌ Nie znaleziono urodzin',
+                            description: 'Na tym serwerze nie ustawiono jeszcze żadnych urodzin. Użyj `/birthday set` aby dodać urodziny!',
                             color: 'error'
                         })
                     ]
@@ -27,7 +27,7 @@ export default {
             }
 
             const embed = createEmbed({
-                title: '🎂 Next 5 Upcoming Birthdays',
+                title: '🎂 Następne 5 nadchodzących urodzin',
                 description: `Here are the next 5 birthdays in ${interaction.guild.name}:`,
                 color: 'info'
             });
@@ -61,8 +61,8 @@ export default {
                 return await InteractionHelper.safeEditReply(interaction, {
                     embeds: [
                         createEmbed({
-                            title: '❌ No Upcoming Birthdays',
-                            description: 'No upcoming birthdays found for current server members.',
+                            title: '❌ Brak nadchodzących urodzin',
+                            description: 'Nie znaleziono nadchodzących urodzin dla obecnych członków serwera.',
                             color: 'error'
                         })
                     ]
@@ -70,7 +70,7 @@ export default {
             }
 
             embed.setFooter({
-                text: 'Use /birthday set to add your birthday!',
+                text: 'Użyj /birthday set aby dodać swoje urodziny!',
                 iconURL: interaction.guild.iconURL()
             });
 
