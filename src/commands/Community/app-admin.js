@@ -39,12 +39,12 @@ export default {
     .addSubcommand((subcommand) =>
         subcommand
             .setName("setup")
-            .setDescription("Configure application settings")
+            .setDescription("Konfiguruj ustawienia aplikacji")
             .addChannelOption((option) =>
                 option
                     .setName("log-channel")
                     .setDescription(
-                        "Channel where new applications will be logged",
+                        "Kanał, w którym będą rejestrowane nowe aplikacje",
                     )
                     .setRequired(false),
             )
@@ -52,42 +52,42 @@ export default {
                 option
                     .setName("manager-role")
                     .setDescription(
-                        "Role that can manage applications (can be used multiple times)",
+                        "Rola umożliwiająca zarządzanie aplikacjami (można jej używać wielokrotnie)",
                     )
                     .setRequired(false),
             )
             .addBooleanOption((option) =>
                 option
                     .setName("enabled")
-                    .setDescription("Enable or disable applications")
+                    .setDescription("Włącz lub wyłącz aplikacje")
                     .setRequired(false),
             ),
     )
     .addSubcommand((subcommand) =>
         subcommand
             .setName("view")
-            .setDescription("View a specific application")
+            .setDescription("Wyświetl konkretną aplikację")
             .addStringOption((option) =>
                 option
                     .setName("id")
-                    .setDescription("The application ID")
+                    .setDescription("Identyfikator aplikacji")
                     .setRequired(true),
             ),
     )
     .addSubcommand((subcommand) =>
         subcommand
             .setName("review")
-            .setDescription("Approve or deny an application")
+            .setDescription("Zatwierdź lub odrzuć wniosek")
             .addStringOption((option) =>
                 option
                     .setName("id")
-                    .setDescription("The application ID")
+                    .setDescription("Identyfikator aplikacji")
                     .setRequired(true),
             )
             .addStringOption((option) =>
                 option
                     .setName("action")
-                    .setDescription("Approve or deny the application")
+                    .setDescription("Zatwierdź lub odrzuć wniosek")
                     .setRequired(true)
                     .addChoices(
                         { name: "Approve", value: "approve" },
@@ -97,14 +97,14 @@ export default {
             .addStringOption((option) =>
                 option
                     .setName("reason")
-                    .setDescription("Reason for approval/denial")
+                    .setDescription("Powód zatwierdzenia/odrzucenia")
                     .setRequired(false),
             ),
     )
     .addSubcommand((subcommand) =>
         subcommand
             .setName("list")
-            .setDescription("List all applications")
+            .setDescription("Lista wszystkich aplikacji")
             .addStringOption((option) =>
                 option
                     .setName("status")
