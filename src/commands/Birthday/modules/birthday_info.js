@@ -22,7 +22,7 @@ export default {
                     embeds: [createEmbed({
                         title: '❌ Nie znaleziono urodzin',
                         description: targetUser.id === interaction.user.id 
-                            ? "You haven't set your birthday yet. Use `/birthday set` to add it!"
+                            ? "Nie ustawiłeś jeszcze daty swoich urodzin. Użyj `/birthday set` aby to dodać!"
                             : `${targetUser.username} hasn't set their birthday yet.`,
                         color: 'error'
                     })]
